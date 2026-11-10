@@ -33,3 +33,13 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+venv/
+.venv/
+__pycache__/
+.env
+.dart_tool/
+build/
+*.apk
+.idea/
+.vscode/
