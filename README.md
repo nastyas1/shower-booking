@@ -51,3 +51,25 @@
 - **`data`**: Работа с API и сохранение токенов.
 - **`models`**: Модели данных.
 
+## Локальный запуск backend
+
+Требуются Python 3.12+ и локальный PostgreSQL. Выполните команды из корня репозитория:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+Сгенерируйте ключ командой ниже и скопируйте его в `SECRET_KEY`. Заполните
+`DB_NAME`, `DB_USER` и `DB_PASSWORD` в `backend/.env` значениями для вашей
+локальной среды. Создайте в PostgreSQL базу с именем из `DB_NAME`, затем
+выполните миграции и запустите сервер:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+python manage.py migrate
+python manage.py runserver
+```
