@@ -51,7 +51,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.users.apps.UsersConfig',
+    'apps.cabins.apps.CabinsConfig',
+    'apps.bookings.apps.BookingsConfig',
+    'apps.maintenance.apps.MaintenanceConfig',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
