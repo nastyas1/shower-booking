@@ -63,7 +63,7 @@ def create_booking(request):
 
     try:
         with transaction.atomic():
-            cabin = Cabin.objects.get(pk=cabin_id)
+            cabin = Cabin.objects.select_for_update().get(pk=cabin_id)
             validate_booking_request(cabin, starts_at, ends_at)
             booking = Booking.objects.create(
                 user=request.user,
