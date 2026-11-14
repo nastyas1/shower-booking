@@ -71,5 +71,22 @@ cp .env.example .env
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 python manage.py migrate
+```
+
+Для заполнения локальной базы тестовыми кабинками, пользователями и
+администратором укажите `SEED_ADMIN_PASSWORD` в `backend/.env` и выполните:
+
+```bash
+python manage.py seed_data
+```
+
+Если нужен вход демо-пользователями, задайте им локальный пароль через
+`SEED_USER_PASSWORD` в `backend/.env` до запуска команды. Без него новые
+демо-пользователи создаются с отключённым паролем. Повторный запуск команды
+не сбрасывает пароли существующих записей и не создаёт дубликаты.
+
+Затем запустите сервер:
+
+```bash
 python manage.py runserver
 ```
