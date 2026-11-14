@@ -1,10 +1,10 @@
 import json
 
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 
 from apps.bookings.models import Booking
 from apps.bookings.services.booking import (
@@ -87,3 +87,22 @@ def create_booking(request):
         },
         status=201,
     )
+
+
+@require_http_methods(['DELETE'])
+def cancel_booking(request, booking_id):
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {'detail': 'Authentication credentials were not provided.'},
+            status=401,
+        )
+
+    booking = Booking.objects.filter(
+        pk=booking_id,
+        user=request.user,
+    ).first()
+    if booking is None:
+        return JsonResponse({'detail': 'Booking not found.'}, status=404)
+
+    booking.delete()
+    return HttpResponse(status=204)
