@@ -33,6 +33,8 @@ if not SECRET_KEY:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() in {'true', '1', 'yes', 'on'}
+OPERATING_OPEN_TIME = os.getenv('OPERATING_OPEN_TIME', '06:00')
+OPERATING_CLOSE_TIME = os.getenv('OPERATING_CLOSE_TIME', '04:00')
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -127,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('TIME_ZONE', 'Europe/Moscow')
 
 USE_I18N = True
 
