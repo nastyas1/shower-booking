@@ -1,24 +1,22 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'core/router/app_router.dart';
 import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const ShowerBookingApp());
+  runApp(const ProviderScope(child: ShowerBookingApp()));
 }
 
-class ShowerBookingApp extends StatelessWidget {
+class ShowerBookingApp extends ConsumerWidget {
   const ShowerBookingApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
       title: 'Shower Booking',
       theme: AppTheme.light,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Shower Booking'),
-        ),
-      ),
+      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }
