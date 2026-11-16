@@ -52,15 +52,20 @@ flutter run
 `GET /api/cabins/available?date=YYYY-MM-DD`; даты и время отображаются в часовом
 поясе, который возвращает API.
 
+Мобильный клиент использует `POST /api/auth/register/` с полями `username`,
+`email` и `password` для регистрации, `POST /api/auth/token/` с `username` и
+`password` для входа, а также `POST /api/auth/token/refresh/` для обновления
+access-токена. Успешные ответы регистрации и входа содержат строки `access` и
+`refresh`. Защищённые операции принимают access-токен в заголовке
+`Authorization: Bearer <access>`.
+
 Экран «Мои брони» ожидает `GET /api/bookings` с объектом
 `{"bookings":[{"id":1,"cabin_number":"A-01","starts_at":"...","ends_at":"..."}]}`.
-Отмена выполняется запросом `DELETE /api/bookings/{id}`. Чтобы экран работал с
-backend, оба endpoint-а должны быть доступны в интегрированной версии; в текущей
-основе endpoint списка броней пока не реализован.
+Отмена выполняется запросом `DELETE /api/bookings/{id}`. Эти два endpoint-а
+добавляются отдельными задачами после интеграции аутентификации.
 
 Форма неисправности отправляет `POST /api/maintenance` с полями `cabin_id` и
-`description`. Backend должен вернуть успешный ответ после создания заявки; этот
-endpoint пока отсутствует в интегрированной версии.
+`description`; endpoint уже доступен и требует Bearer access-токен.
 
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub

@@ -20,6 +20,7 @@ from config.admin_site import admin_site
 
 urlpatterns = [
     path('admin/', admin_site.urls),
+    path('api/', include('apps.users.urls')),
     path('api/', include('apps.cabins.urls')),
     path('api/', include('apps.bookings.urls')),
     path('api/', include('apps.maintenance.urls')),
