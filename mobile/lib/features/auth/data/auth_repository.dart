@@ -1,19 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/network/access_token_source.dart';
 import '../../../core/network/api_client.dart';
-
-final accessTokenSourceProvider = Provider<AccessTokenSource>(
-  (ref) => _EmptyAccessTokenSource(),
-);
+import 'secure_token_store.dart';
+import 'token_store.dart';
 
 final apiClientProvider = Provider<ApiClient>(
-  (ref) => ApiClient(tokenSource: ref.watch(accessTokenSourceProvider)),
+  (ref) => ApiClient(tokenSource: ref.watch(secureTokenStoreProvider)),
 );
 
 final authRepositoryProvider = Provider<AuthRepository>(
-  (ref) => AuthRepository(ref.watch(apiClientProvider).dio),
+  (ref) => AuthRepository(
+    ref.watch(apiClientProvider).dio,
+    ref.watch(secureTokenStoreProvider),
+  ),
 );
 
 class AuthTokens {
@@ -33,9 +33,10 @@ class AuthTokens {
 }
 
 class AuthRepository {
-  const AuthRepository(this._dio);
+  const AuthRepository(this._dio, this._tokenStore);
 
   final Dio _dio;
+  final TokenStore _tokenStore;
 
   Future<AuthTokens> login({
     required String username,
@@ -45,7 +46,12 @@ class AuthRepository {
       'auth/token/',
       data: {'username': username, 'password': password},
     );
-    return AuthTokens.fromJson(response.data ?? const {});
+    final tokens = AuthTokens.fromJson(response.data ?? const {});
+    await _tokenStore.saveTokens(
+      accessToken: tokens.access,
+      refreshToken: tokens.refresh,
+    );
+    return tokens;
   }
 
   Future<AuthTokens> register({
@@ -61,11 +67,11 @@ class AuthRepository {
         'password': password,
       },
     );
-    return AuthTokens.fromJson(response.data ?? const {});
+    final tokens = AuthTokens.fromJson(response.data ?? const {});
+    await _tokenStore.saveTokens(
+      accessToken: tokens.access,
+      refreshToken: tokens.refresh,
+    );
+    return tokens;
   }
-}
-
-class _EmptyAccessTokenSource implements AccessTokenSource {
-  @override
-  Future<String?> readAccessToken() async => null;
 }
