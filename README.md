@@ -34,6 +34,24 @@
 - **Фреймворк:** Flutter (Dart)
 - **Платформа:** Android (сборка APK)
 
+Исходный код мобильного приложения находится в `mobile/`. Для запуска нужны
+Flutter SDK и Android SDK:
+
+```bash
+cd mobile
+flutter pub get
+flutter test
+flutter run
+```
+
+Для эмулятора Android по умолчанию используется API `http://10.0.2.2:8000/api/`.
+При необходимости задайте другой адрес через
+`--dart-define=API_BASE_URL=http://<host>:8000/api/`.
+
+Экран расписания получает активные кабинки и свободные интервалы через
+`GET /api/cabins/available?date=YYYY-MM-DD`; даты и время отображаются в часовом
+поясе, который возвращает API.
+
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub
 - **Управление задачами:** GitHub Projects (SubIssues, Issues, Milestones)
@@ -51,3 +69,53 @@
 - **`data`**: Работа с API и сохранение токенов.
 - **`models`**: Модели данных.
 
+## Локальный запуск backend
+
+Требуются Python 3.12+ и локальный PostgreSQL. Выполните команды из корня репозитория:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+Сгенерируйте ключ командой ниже и скопируйте его в `SECRET_KEY`. Заполните
+`DB_NAME`, `DB_USER` и `DB_PASSWORD` в `backend/.env` значениями для вашей
+локальной среды. Создайте в PostgreSQL базу с именем из `DB_NAME`, затем
+выполните миграции и запустите сервер:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+python manage.py migrate
+```
+
+Для заполнения локальной базы тестовыми кабинками, пользователями и
+администратором укажите `SEED_ADMIN_PASSWORD` в `backend/.env` и выполните:
+
+```bash
+python manage.py seed_data
+```
+
+Если нужен вход демо-пользователями, задайте им локальный пароль через
+`SEED_USER_PASSWORD` в `backend/.env` до запуска команды. Без него новые
+демо-пользователи создаются с отключённым паролем. Повторный запуск команды
+не сбрасывает пароли существующих записей и не создаёт дубликаты.
+
+Затем запустите сервер:
+
+```bash
+python manage.py runserver
+```
+
+Часовой пояс и ежедневный интервал работы задаются переменными `TIME_ZONE`,
+`OPERATING_OPEN_TIME` и `OPERATING_CLOSE_TIME` в `backend/.env`. Если время
+закрытия не позже времени открытия, интервал заканчивается на следующий день.
+
+### Доступность кабинок
+
+`GET /api/cabins/available?date=YYYY-MM-DD` возвращает активные кабинки со
+свободными интервалами на выбранную дату. Интервалы учитывают существующие
+брони и открытые/выполняющиеся заявки на ремонт. Даты и время ответа используют
+настроенный часовой пояс.
