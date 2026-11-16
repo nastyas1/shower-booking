@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../theme/app_theme.dart';
@@ -55,6 +56,18 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
       appBar: AppBar(
         title: const Text('Расписание'),
         actions: [
+          IconButton(
+            key: const Key('open-my-bookings'),
+            tooltip: 'Мои брони',
+            onPressed: () => context.push('/bookings'),
+            icon: const Icon(Icons.bookmark_outline),
+          ),
+          IconButton(
+            key: const Key('open-report-issue'),
+            tooltip: 'Сообщить о неисправности',
+            onPressed: () => context.push('/report-issue'),
+            icon: const Icon(Icons.build_outlined),
+          ),
           IconButton(
             key: const Key('open-date-picker'),
             tooltip: 'Выбрать дату',
