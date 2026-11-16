@@ -1,0 +1,28 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div class="module">
+  <h2>Booking load for {{ booking_load.service_date }}</h2>
+  <table>
+    <tbody>
+      <tr>
+        <th scope="row">Bookings during operating hours</th>
+        <td>{{ booking_load.booking_count }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Active cabins</th>
+        <td>{{ booking_load.active_cabin_count }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Active cabins with a booking</th>
+        <td>{{ booking_load.occupied_cabin_count }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Cabin utilization</th>
+        <td>{{ booking_load.utilization_percent }}%</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{{ block.super }}
+{% endblock %}
