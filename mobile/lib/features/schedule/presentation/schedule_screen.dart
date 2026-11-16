@@ -63,6 +63,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
             icon: const Icon(Icons.bookmark_outline),
           ),
           IconButton(
+            key: const Key('open-report-issue'),
+            tooltip: 'Сообщить о неисправности',
+            onPressed: () => context.push('/report-issue'),
+            icon: const Icon(Icons.build_outlined),
+          ),
+          IconButton(
             key: const Key('open-date-picker'),
             tooltip: 'Выбрать дату',
             onPressed: _selectDate,

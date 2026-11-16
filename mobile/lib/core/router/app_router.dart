@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../features/booking/presentation/my_bookings_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/maintenance/presentation/report_issue_screen.dart';
 import '../../features/schedule/presentation/schedule_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -19,6 +20,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/bookings',
         builder: (context, state) => const MyBookingsScreen(),
+      ),
+      GoRoute(
+        path: '/report-issue',
+        builder: (context, state) => const ReportIssueScreen(),
       ),
       GoRoute(
         path: '/booking/new',
