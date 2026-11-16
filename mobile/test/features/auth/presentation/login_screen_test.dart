@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:shower_booking/features/auth/data/auth_repository.dart';
+import 'package:shower_booking/features/auth/data/token_store.dart';
 import 'package:shower_booking/main.dart';
 
 class _FakeAuthRepository extends AuthRepository {
-  _FakeAuthRepository({this.loginError}) : super(Dio());
+  _FakeAuthRepository({this.loginError}) : super(Dio(), _FakeTokenStore());
 
   final DioException? loginError;
   var loginCalls = 0;
@@ -21,6 +22,23 @@ class _FakeAuthRepository extends AuthRepository {
     if (loginError != null) throw loginError!;
     return const AuthTokens(access: 'access', refresh: 'refresh');
   }
+}
+
+class _FakeTokenStore implements TokenStore {
+  @override
+  Future<void> clearTokens() async {}
+
+  @override
+  Future<String?> readAccessToken() async => null;
+
+  @override
+  Future<String?> readRefreshToken() async => null;
+
+  @override
+  Future<void> saveTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {}
 }
 
 void main() {
