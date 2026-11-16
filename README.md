@@ -34,6 +34,16 @@
 - **Фреймворк:** Flutter (Dart)
 - **Платформа:** Android (сборка APK)
 
+Исходный код мобильного приложения находится в `mobile/`. Для запуска нужны
+Flutter SDK и Android SDK:
+
+```bash
+cd mobile
+flutter pub get
+flutter test
+flutter run
+```
+
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub
 - **Управление задачами:** GitHub Projects (SubIssues, Issues, Milestones)
