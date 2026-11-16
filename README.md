@@ -52,6 +52,12 @@ flutter run
 `GET /api/cabins/available?date=YYYY-MM-DD`; даты и время отображаются в часовом
 поясе, который возвращает API.
 
+Экран «Мои брони» ожидает `GET /api/bookings` с объектом
+`{"bookings":[{"id":1,"cabin_number":"A-01","starts_at":"...","ends_at":"..."}]}`.
+Отмена выполняется запросом `DELETE /api/bookings/{id}`. Чтобы экран работал с
+backend, оба endpoint-а должны быть доступны в интегрированной версии; в текущей
+основе endpoint списка броней пока не реализован.
+
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub
 - **Управление задачами:** GitHub Projects (SubIssues, Issues, Milestones)
