@@ -75,8 +75,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   String? _validateUsername(String? value) {
     final username = value?.trim() ?? '';
-    if (username.isEmpty) return 'Введите логин';
-    if (username.length < 3) return 'Логин должен содержать не менее 3 символов';
+    if (username.isEmpty) {
+      return 'Введите логин';
+    }
+    if (username.length < 3) {
+      return 'Логин должен содержать не менее 3 символов';
+    }
     return null;
   }
 
@@ -131,9 +135,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ? 'Зарегистрируйтесь, чтобы бронировать душевые'
                           : 'Войдите, чтобы управлять своими бронированиями',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.mutedInk,
-                          ),
+                      style: Theme.of(context).textTheme.bodyLarge
+                          ?.copyWith(color: AppColors.mutedInk),
                     ),
                     const SizedBox(height: 32),
                     TextFormField(
@@ -200,7 +203,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         child: Text(
                           _errorMessage!,
                           key: const Key('auth-error'),
-                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
                         ),
                       ),
                     ],
@@ -213,17 +218,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               dimension: 22,
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
-                          : Text(_isRegistering ? 'Зарегистрироваться' : 'Войти'),
+                          : Text(
+                              _isRegistering ? 'Зарегистрироваться' : 'Войти',
+                            ),
                     ),
                     const SizedBox(height: 12),
                     TextButton(
                       onPressed: _isSubmitting
                           ? null
                           : () => setState(() {
-                                _isRegistering = !_isRegistering;
-                                _errorMessage = null;
-                                _formKey.currentState?.reset();
-                              }),
+                              _isRegistering = !_isRegistering;
+                              _errorMessage = null;
+                              _formKey.currentState?.reset();
+                            }),
                       child: Text(
                         _isRegistering
                             ? 'Уже есть аккаунт? Войти'

@@ -7,9 +7,7 @@ import 'package:shower_booking/theme/app_theme.dart';
 
 void main() {
   testWidgets('renders the app with its base theme', (tester) async {
-    await tester.pumpWidget(
-      const ProviderScope(child: ShowerBookingApp()),
-    );
+    await tester.pumpWidget(const ProviderScope(child: ShowerBookingApp()));
 
     expect(find.byKey(const Key('auth-username')), findsOneWidget);
 

@@ -44,6 +44,14 @@ flutter test
 flutter run
 ```
 
+Для эмулятора Android по умолчанию используется API `http://10.0.2.2:8000/api/`.
+При необходимости задайте другой адрес через
+`--dart-define=API_BASE_URL=http://<host>:8000/api/`.
+
+Экран расписания получает активные кабинки и свободные интервалы через
+`GET /api/cabins/available?date=YYYY-MM-DD`; даты и время отображаются в часовом
+поясе, который возвращает API.
+
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub
 - **Управление задачами:** GitHub Projects (SubIssues, Issues, Milestones)
