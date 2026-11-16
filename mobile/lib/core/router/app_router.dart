@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../features/auth/presentation/login_screen.dart';
+
 final appRouterProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: '/login',
@@ -12,7 +14,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/login',
-        builder: (context, state) => const _RoutePlaceholder(title: 'Sign in'),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: '/schedule',

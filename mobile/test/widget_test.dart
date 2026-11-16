@@ -11,7 +11,7 @@ void main() {
       const ProviderScope(child: ShowerBookingApp()),
     );
 
-    expect(find.text('Sign in'), findsNWidgets(2));
+    expect(find.byKey(const Key('auth-username')), findsOneWidget);
 
     final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
     expect(materialApp.theme, same(AppTheme.light));
