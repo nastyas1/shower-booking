@@ -18,7 +18,8 @@ class CreateMaintenanceRequestApiTests(TestCase):
         )
         self.cabin = Cabin.objects.create(number='M-01')
         self.client.force_login(self.user)
-        operating_interval = get_operating_interval(date.today() + timedelta(days=30))
+        self.service_date = date.today() + timedelta(days=30)
+        operating_interval = get_operating_interval(self.service_date)
         self.starts_at = operating_interval.starts_at + timedelta(hours=1)
         self.ends_at = self.starts_at + timedelta(minutes=30)
 
@@ -115,3 +116,25 @@ class CreateMaintenanceRequestApiTests(TestCase):
 
         self.assertEqual(response.status_code, 409)
         self.assertFalse(Booking.objects.exists())
+
+    def test_reporting_a_fault_removes_cabin_from_schedule(self):
+        response = self.client.get(
+            '/api/cabins/available',
+            {'date': self.service_date.isoformat()},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            [cabin['id'] for cabin in response.json()['cabins']],
+            [self.cabin.pk],
+        )
+
+        response = self._post_request()
+        self.assertEqual(response.status_code, 201)
+
+        response = self.client.get(
+            '/api/cabins/available',
+            {'date': self.service_date.isoformat()},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['cabins'], [])
