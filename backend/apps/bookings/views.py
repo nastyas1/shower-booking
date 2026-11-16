@@ -4,7 +4,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 
 from apps.bookings.models import Booking
 from apps.bookings.services.booking import (
@@ -14,6 +14,36 @@ from apps.bookings.services.booking import (
 )
 from apps.cabins.models import Cabin
 from apps.users.authentication import get_api_user
+
+
+@require_http_methods(['GET', 'POST'])
+def bookings_collection(request):
+    if request.method == 'GET':
+        user = get_api_user(request)
+        if user is None:
+            return JsonResponse(
+                {'detail': 'Authentication credentials were not provided.'},
+                status=401,
+            )
+
+        bookings = (
+            Booking.objects.filter(user=user)
+            .select_related('cabin')
+            .order_by('starts_at')
+        )
+        return JsonResponse({
+            'bookings': [
+                {
+                    'id': booking.pk,
+                    'cabin_number': booking.cabin.number,
+                    'starts_at': timezone.localtime(booking.starts_at).isoformat(),
+                    'ends_at': timezone.localtime(booking.ends_at).isoformat(),
+                }
+                for booking in bookings
+            ],
+        })
+
+    return create_booking(request)
 
 
 def _parse_aware_datetime(value):
