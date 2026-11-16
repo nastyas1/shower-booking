@@ -31,5 +31,18 @@ render.experimental.xml
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
+# Local Copilot instructions
+.github/
+
 # Android Profiling
 *.hprof
+
+venv/
+.venv/
+__pycache__/
+.env
+.dart_tool/
+build/
+*.apk
+.idea/
+.vscode/
