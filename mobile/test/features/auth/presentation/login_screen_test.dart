@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:shower_booking/features/auth/data/auth_repository.dart';
 import 'package:shower_booking/features/auth/data/token_store.dart';
+import 'package:shower_booking/features/schedule/data/availability_repository.dart';
 import 'package:shower_booking/main.dart';
 
 class _FakeAuthRepository extends AuthRepository {
@@ -41,6 +42,13 @@ class _FakeTokenStore implements TokenStore {
   }) async {}
 }
 
+class _FakeAvailabilityRepository extends AvailabilityRepository {
+  _FakeAvailabilityRepository() : super(Dio());
+
+  @override
+  Future<List<CabinAvailability>> getAvailableCabins(DateTime date) async => [];
+}
+
 void main() {
   testWidgets('validates required login fields before calling the API', (
     tester,
@@ -48,7 +56,12 @@ void main() {
     final repository = _FakeAuthRepository();
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repository),
+          availabilityRepositoryProvider.overrideWithValue(
+            _FakeAvailabilityRepository(),
+          ),
+        ],
         child: const ShowerBookingApp(),
       ),
     );
@@ -75,14 +88,16 @@ void main() {
     );
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repository),
+          availabilityRepositoryProvider.overrideWithValue(
+            _FakeAvailabilityRepository(),
+          ),
+        ],
         child: const ShowerBookingApp(),
       ),
     );
-    await tester.enterText(
-      find.byKey(const Key('auth-username')),
-      'test-user',
-    );
+    await tester.enterText(find.byKey(const Key('auth-username')), 'test-user');
     await tester.enterText(
       find.byKey(const Key('auth-password')),
       'test-password',
@@ -92,7 +107,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('auth-error')), findsOneWidget);
-    expect(find.text('Проверьте логин и пароль и попробуйте ещё раз.'), findsOneWidget);
+    expect(
+      find.text('Проверьте логин и пароль и попробуйте ещё раз.'),
+      findsOneWidget,
+    );
     expect(repository.loginCalls, 1);
   });
 
@@ -102,14 +120,16 @@ void main() {
     final repository = _FakeAuthRepository();
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repository),
+          availabilityRepositoryProvider.overrideWithValue(
+            _FakeAvailabilityRepository(),
+          ),
+        ],
         child: const ShowerBookingApp(),
       ),
     );
-    await tester.enterText(
-      find.byKey(const Key('auth-username')),
-      'test-user',
-    );
+    await tester.enterText(find.byKey(const Key('auth-username')), 'test-user');
     await tester.enterText(
       find.byKey(const Key('auth-password')),
       'test-password',
@@ -118,7 +138,7 @@ void main() {
     await tester.tap(find.byKey(const Key('auth-submit')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Schedule'), findsNWidgets(2));
+    expect(find.text('Расписание'), findsOneWidget);
     expect(repository.loginCalls, 1);
   });
 
@@ -131,12 +151,21 @@ void main() {
 
     expect(find.byKey(const Key('auth-email')), findsOneWidget);
     await tester.enterText(find.byKey(const Key('auth-username')), 'new-user');
-    await tester.enterText(find.byKey(const Key('auth-email')), 'invalid-email');
+    await tester.enterText(
+      find.byKey(const Key('auth-email')),
+      'invalid-email',
+    );
     await tester.enterText(find.byKey(const Key('auth-password')), 'short');
     await tester.tap(find.byKey(const Key('auth-submit')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Введите корректный адрес электронной почты'), findsOneWidget);
-    expect(find.text('Пароль должен содержать не менее 8 символов'), findsOneWidget);
+    expect(
+      find.text('Введите корректный адрес электронной почты'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Пароль должен содержать не менее 8 символов'),
+      findsOneWidget,
+    );
   });
 }

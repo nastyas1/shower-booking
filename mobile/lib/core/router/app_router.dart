@@ -3,22 +3,22 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/schedule/presentation/schedule_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: '/login',
     routes: [
-      GoRoute(
-        path: '/',
-        redirect: (context, state) => '/login',
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/', redirect: (context, state) => '/login'),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/schedule',
-        builder: (context, state) => const _RoutePlaceholder(title: 'Schedule'),
+        builder: (context, state) => const ScheduleScreen(),
+      ),
+      GoRoute(
+        path: '/booking/new',
+        builder: (context, state) =>
+            const _RoutePlaceholder(title: 'Бронирование'),
       ),
       GoRoute(
         path: '/profile',
