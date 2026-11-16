@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,7 +20,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Sign in'), findsNWidgets(2));
+    expect(find.byKey(const Key('auth-username')), findsOneWidget);
 
     container.read(appRouterProvider).go('/schedule');
     await tester.pumpAndSettle();
