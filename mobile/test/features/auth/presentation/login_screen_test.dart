@@ -96,6 +96,32 @@ void main() {
     expect(repository.loginCalls, 1);
   });
 
+  testWidgets('navigates to the schedule after successful login', (
+    tester,
+  ) async {
+    final repository = _FakeAuthRepository();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [authRepositoryProvider.overrideWithValue(repository)],
+        child: const ShowerBookingApp(),
+      ),
+    );
+    await tester.enterText(
+      find.byKey(const Key('auth-username')),
+      'test-user',
+    );
+    await tester.enterText(
+      find.byKey(const Key('auth-password')),
+      'test-password',
+    );
+
+    await tester.tap(find.byKey(const Key('auth-submit')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Schedule'), findsNWidgets(2));
+    expect(repository.loginCalls, 1);
+  });
+
   testWidgets('registration mode validates email and password length', (
     tester,
   ) async {
