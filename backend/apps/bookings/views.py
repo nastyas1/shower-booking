@@ -13,6 +13,7 @@ from apps.bookings.services.booking import (
     validate_booking_request,
 )
 from apps.cabins.models import Cabin
+from apps.users.authentication import get_api_user
 
 
 def _parse_aware_datetime(value):
@@ -29,7 +30,8 @@ def _parse_aware_datetime(value):
 
 @require_POST
 def create_booking(request):
-    if not request.user.is_authenticated:
+    user = get_api_user(request)
+    if user is None:
         return JsonResponse(
             {'detail': 'Authentication credentials were not provided.'},
             status=401,
@@ -66,7 +68,7 @@ def create_booking(request):
             cabin = Cabin.objects.get(pk=cabin_id)
             validate_booking_request(cabin, starts_at, ends_at)
             booking = Booking.objects.create(
-                user=request.user,
+                user=user,
                 cabin=cabin,
                 starts_at=starts_at,
                 ends_at=ends_at,

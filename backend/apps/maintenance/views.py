@@ -6,11 +6,13 @@ from django.views.decorators.http import require_POST
 
 from apps.cabins.models import Cabin
 from apps.maintenance.models import MaintenanceRequest
+from apps.users.authentication import get_api_user
 
 
 @require_POST
 def create_maintenance_request(request):
-    if not request.user.is_authenticated:
+    user = get_api_user(request)
+    if user is None:
         return JsonResponse(
             {'detail': 'Authentication credentials were not provided.'},
             status=401,
@@ -48,7 +50,7 @@ def create_maintenance_request(request):
 
     maintenance_request = MaintenanceRequest.objects.create(
         cabin=cabin,
-        reported_by=request.user,
+        reported_by=user,
         description=description.strip(),
     )
     return JsonResponse(
