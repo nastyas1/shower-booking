@@ -13,24 +13,25 @@ abstract final class AppColors {
 abstract final class AppTheme {
   static final light = ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      brightness: Brightness.light,
-      surface: AppColors.canvas,
-      error: AppColors.error,
-    ).copyWith(
-      primary: AppColors.primary,
-      onPrimary: Colors.white,
-      primaryContainer: AppColors.secondary,
-      onPrimaryContainer: AppColors.ink,
-    ),
+    colorScheme:
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.light,
+          surface: AppColors.canvas,
+          error: AppColors.error,
+        ).copyWith(
+          primary: AppColors.primary,
+          onPrimary: Colors.white,
+          primaryContainer: AppColors.secondary,
+          onPrimaryContainer: AppColors.ink,
+        ),
     scaffoldBackgroundColor: AppColors.canvas,
     fontFamily: 'Roboto',
     textTheme: Typography.material2021().black.apply(
-          bodyColor: AppColors.ink,
-          displayColor: AppColors.ink,
-          fontFamily: 'Roboto',
-        ),
+      bodyColor: AppColors.ink,
+      displayColor: AppColors.ink,
+      fontFamily: 'Roboto',
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.canvas,
       foregroundColor: AppColors.ink,
@@ -55,9 +56,7 @@ abstract final class AppTheme {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         minimumSize: const Size.fromHeight(52),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
     ),
   );

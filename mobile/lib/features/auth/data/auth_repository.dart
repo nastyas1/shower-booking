@@ -61,11 +61,7 @@ class AuthRepository {
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
       'auth/register/',
-      data: {
-        'username': username,
-        'email': email,
-        'password': password,
-      },
+      data: {'username': username, 'email': email, 'password': password},
     );
     final tokens = AuthTokens.fromJson(response.data ?? const {});
     await _tokenStore.saveTokens(
