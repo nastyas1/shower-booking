@@ -34,6 +34,34 @@
 - **Фреймворк:** Flutter (Dart)
 - **Платформа:** Android (сборка APK)
 
+Исходный код мобильного приложения находится в `mobile/`. Для запуска нужны
+Flutter SDK и Android SDK:
+
+```bash
+cd mobile
+flutter pub get
+flutter test
+flutter run
+```
+
+Для эмулятора Android по умолчанию используется API `http://10.0.2.2:8000/api/`.
+При необходимости задайте другой адрес через
+`--dart-define=API_BASE_URL=http://<host>:8000/api/`.
+
+Экран расписания получает активные кабинки и свободные интервалы через
+`GET /api/cabins/available?date=YYYY-MM-DD`; даты и время отображаются в часовом
+поясе, который возвращает API.
+
+Экран «Мои брони» ожидает `GET /api/bookings` с объектом
+`{"bookings":[{"id":1,"cabin_number":"A-01","starts_at":"...","ends_at":"..."}]}`.
+Отмена выполняется запросом `DELETE /api/bookings/{id}`. Чтобы экран работал с
+backend, оба endpoint-а должны быть доступны в интегрированной версии; в текущей
+основе endpoint списка броней пока не реализован.
+
+Форма неисправности отправляет `POST /api/maintenance` с полями `cabin_id` и
+`description`. Backend должен вернуть успешный ответ после создания заявки; этот
+endpoint пока отсутствует в интегрированной версии.
+
 ### Инструменты разработки
 - **Контроль версий:** Git + GitHub
 - **Управление задачами:** GitHub Projects (SubIssues, Issues, Milestones)
