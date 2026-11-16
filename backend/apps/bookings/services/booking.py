@@ -6,7 +6,7 @@ from django.utils import timezone
 from apps.bookings.models import Booking
 from apps.bookings.services.availability import get_operating_interval
 from apps.cabins.models import Cabin
-from apps.maintenance.models import MaintenanceRequest
+from apps.maintenance.services import is_cabin_under_maintenance
 
 
 class BookingRequestError(Exception):
@@ -70,13 +70,7 @@ def validate_booking_request(
     if not cabin.is_active:
         raise BookingConflict('The selected cabin is not active.')
 
-    if MaintenanceRequest.objects.filter(
-        cabin=cabin,
-        status__in=[
-            MaintenanceRequest.Status.OPEN,
-            MaintenanceRequest.Status.IN_PROGRESS,
-        ],
-    ).exists():
+    if is_cabin_under_maintenance(cabin):
         raise BookingConflict('The selected cabin is unavailable for maintenance.')
 
     if Booking.objects.filter(

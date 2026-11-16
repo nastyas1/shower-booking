@@ -1,8 +1,11 @@
 import json
+from datetime import date, timedelta
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from apps.bookings.models import Booking
+from apps.bookings.services.availability import get_operating_interval
 from apps.cabins.models import Cabin
 from apps.maintenance.models import MaintenanceRequest
 
@@ -15,6 +18,9 @@ class CreateMaintenanceRequestApiTests(TestCase):
         )
         self.cabin = Cabin.objects.create(number='M-01')
         self.client.force_login(self.user)
+        operating_interval = get_operating_interval(date.today() + timedelta(days=30))
+        self.starts_at = operating_interval.starts_at + timedelta(hours=1)
+        self.ends_at = self.starts_at + timedelta(minutes=30)
 
     def _post_request(self, **overrides):
         payload = {
@@ -92,3 +98,20 @@ class CreateMaintenanceRequestApiTests(TestCase):
 
         response = self.client.get('/api/maintenance')
         self.assertEqual(response.status_code, 405)
+
+    def test_new_request_prevents_booking_the_cabin(self):
+        response = self._post_request()
+        self.assertEqual(response.status_code, 201)
+
+        response = self.client.post(
+            '/api/bookings',
+            data=json.dumps({
+                'cabin_id': self.cabin.pk,
+                'starts_at': self.starts_at.isoformat(),
+                'ends_at': self.ends_at.isoformat(),
+            }),
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, 409)
+        self.assertFalse(Booking.objects.exists())

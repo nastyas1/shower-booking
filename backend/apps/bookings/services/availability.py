@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from apps.bookings.models import Booking
 from apps.cabins.models import Cabin
-from apps.maintenance.models import MaintenanceRequest
+from apps.maintenance.services import is_cabin_under_maintenance
 
 
 @dataclass(frozen=True)
@@ -74,13 +74,7 @@ def get_available_intervals(
     if starts_at >= ends_at:
         return []
 
-    if MaintenanceRequest.objects.filter(
-        cabin=cabin,
-        status__in=[
-            MaintenanceRequest.Status.OPEN,
-            MaintenanceRequest.Status.IN_PROGRESS,
-        ],
-    ).exists():
+    if is_cabin_under_maintenance(cabin):
         return []
 
     bookings = Booking.objects.filter(
