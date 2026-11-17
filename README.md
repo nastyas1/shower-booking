@@ -59,10 +59,10 @@ access-токена. Успешные ответы регистрации и в�
 `refresh`. Защищённые операции принимают access-токен в заголовке
 `Authorization: Bearer <access>`.
 
-`GET /api/bookings` возвращает брони текущего пользователя в формате
+Экран «Мои брони» ожидает `GET /api/bookings` с объектом
 `{"bookings":[{"id":1,"cabin_number":"A-01","starts_at":"...","ends_at":"..."}]}`.
-Отмена выполняется запросом `DELETE /api/bookings/{id}`; этот endpoint будет
-добавлен отдельной задачей.
+Отмена выполняется запросом `DELETE /api/bookings/{id}`. Эти два endpoint-а
+добавляются отдельными задачами после интеграции аутентификации.
 
 Форма неисправности отправляет `POST /api/maintenance` с полями `cabin_id` и
 `description`; endpoint уже доступен и требует Bearer access-токен.
